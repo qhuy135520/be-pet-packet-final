@@ -16,25 +16,40 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
 	private Integer userId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "user_name")
 	private String userName;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "password")
 	private String password;
 
+	@Column(nullable = false, name = "full_name")
 	private String fullName;
+
+	@Column(nullable = false, name = "gender")
 	private Integer gender;
 
-	@Column(unique = true)
+	@Column(unique = true, name = "email")
 	private String email;
 
+	@Column(name = "user_image")
 	private String userImage;
+	
+	@Column(name = "role_id")
 	private Integer roleId;
+	
+	@Column(name = "address")
 	private String address;
+	
+	@Column(name = "phone")
 	private String phone;
+	
+	@Column(name = "status")
 	private Integer status;
+	
+	@Column(name = "login_provider")
 	private String loginProvider;
 
 	@OneToMany(mappedBy = "user")

@@ -1,5 +1,6 @@
 package com.petpacket.final_project.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -13,21 +14,28 @@ import jakarta.persistence.Table;
 public class OrderDetail {
 
     @Id
+    @Column(name = "order_id")
     private Long orderID;
 
     @Id
+    @Column(name = "product_id")
     private Integer productID;
 
+    @Column(name = "unit_price")
     private Long unitPrice;
+    
+    @Column(name = "quantity")
     private Integer quantity;
+    
+    @Column(name = "discount")
     private Integer discount;
 
     @ManyToOne
-    @JoinColumn(name = "OrderID", insertable = false, updatable = false)
+    @JoinColumn(name = "order_id", insertable = false, updatable = false)
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "ProductID", insertable = false, updatable = false)
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private ServiceStore serviceStore;
 
     public Long getOrderID() {

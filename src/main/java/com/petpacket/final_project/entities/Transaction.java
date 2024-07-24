@@ -15,68 +15,74 @@ import jakarta.persistence.Table;
 @Table(name = "\"Transaction\"", schema = "public")
 public class Transaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer transactionId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "transaction_id")
+	private Integer transactionId;
 
-    @ManyToOne
-    @JoinColumn(name = "bookingId", nullable = false)
-    private Booking booking;
+	@ManyToOne
+	@JoinColumn(name = "booking_id", nullable = false)
+	private Booking booking;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp transactionDate;
+	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", name = "transaction_date")
+	private Timestamp transactionDate;
 
-    private String paymentMethod;
-    private Float amountPaid;
-public Transaction() {
-}
-public Transaction(Integer transactionId, Booking booking, Timestamp transactionDate, String paymentMethod,
-		Float amountPaid) {
-	super();
-	this.transactionId = transactionId;
-	this.booking = booking;
-	this.transactionDate = transactionDate;
-	this.paymentMethod = paymentMethod;
-	this.amountPaid = amountPaid;
-}
+	@Column(name = "payment_method")
+	private String paymentMethod;
 
-public Integer getTransactionId() {
-	return transactionId;
-}
+	@Column(name = "amount_paid")
+	private Float amountPaid;
 
-public void setTransactionId(Integer transactionId) {
-	this.transactionId = transactionId;
-}
+	public Transaction() {
+	}
 
-public Booking getBooking() {
-	return booking;
-}
+	public Transaction(Integer transactionId, Booking booking, Timestamp transactionDate, String paymentMethod,
+			Float amountPaid) {
+		super();
+		this.transactionId = transactionId;
+		this.booking = booking;
+		this.transactionDate = transactionDate;
+		this.paymentMethod = paymentMethod;
+		this.amountPaid = amountPaid;
+	}
 
-public void setBooking(Booking booking) {
-	this.booking = booking;
-}
+	public Integer getTransactionId() {
+		return transactionId;
+	}
 
-public Timestamp getTransactionDate() {
-	return transactionDate;
-}
+	public void setTransactionId(Integer transactionId) {
+		this.transactionId = transactionId;
+	}
 
-public void setTransactionDate(Timestamp transactionDate) {
-	this.transactionDate = transactionDate;
-}
+	public Booking getBooking() {
+		return booking;
+	}
 
-public String getPaymentMethod() {
-	return paymentMethod;
-}
+	public void setBooking(Booking booking) {
+		this.booking = booking;
+	}
 
-public void setPaymentMethod(String paymentMethod) {
-	this.paymentMethod = paymentMethod;
-}
+	public Timestamp getTransactionDate() {
+		return transactionDate;
+	}
 
-public Float getAmountPaid() {
-	return amountPaid;
-}
+	public void setTransactionDate(Timestamp transactionDate) {
+		this.transactionDate = transactionDate;
+	}
 
-public void setAmountPaid(Float amountPaid) {
-	this.amountPaid = amountPaid;
-}
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+	public Float getAmountPaid() {
+		return amountPaid;
+	}
+
+	public void setAmountPaid(Float amountPaid) {
+		this.amountPaid = amountPaid;
+	}
 }

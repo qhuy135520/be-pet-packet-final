@@ -9,22 +9,27 @@ public class Service {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "service_id")
 	private Integer serviceId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "service_name")
 	private String serviceName;
 
 	@ManyToOne
-	@JoinColumn(name = "serviceTypeId")
+	@JoinColumn(name = "service_type_id")
 	private ServiceType serviceType;
 
+	@Column(name = "description")
 	private String description;
 
 	@ManyToOne
-	@JoinColumn(name = "userId")
+	@JoinColumn(name = "user_id")
 	private User user;
 
+	@Column(name = "address")
 	private String address;
+	
+	@Column(name = "status")
 	private Integer status;
 
 	@OneToMany(mappedBy = "service")
@@ -46,7 +51,7 @@ public class Service {
 	private List<Booking> bookings;
 
 	@ManyToMany
-	@JoinTable(name = "ServicePetType", joinColumns = @JoinColumn(name = "serviceId"), inverseJoinColumns = @JoinColumn(name = "petTypeId"))
+	@JoinTable(name = "\"ServicePetType\"", joinColumns = @JoinColumn(name = "service_id"), inverseJoinColumns = @JoinColumn(name = "pet_type_id"))
 	private List<PetType> petTypes;
 
 	public Service() {

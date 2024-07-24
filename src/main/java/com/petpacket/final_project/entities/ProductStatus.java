@@ -9,9 +9,10 @@ public class ProductStatus {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "status_id")
 	private Integer statusId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "status_name")
 	private String statusName;
 
 	@OneToMany(mappedBy = "status")

@@ -8,12 +8,14 @@ public class ServiceImage {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "service_image_id")
 	private Integer serviceImageId;
 
 	@ManyToOne
-	@JoinColumn(name = "serviceId", nullable = false)
+	@JoinColumn(name = "service_id", nullable = false)
 	private Service service;
 
+	@Column(name = "image_txt")
 	private String imageTxt;
 
 	public ServiceImage() {

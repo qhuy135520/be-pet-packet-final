@@ -9,9 +9,10 @@ public class ProductCategory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "category_id")
 	private Integer categoryId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "category_name")
 	private String categoryName;
 
 	@OneToMany(mappedBy = "category")

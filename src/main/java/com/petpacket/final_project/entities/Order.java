@@ -19,33 +19,33 @@ public class Order {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "OrderID")
+	@Column(name = "Order_iD")
 	private Long orderId;
 
-	@Column(name = "OrderDate", nullable = false, columnDefinition = "timestamp default now()")
+	@Column(name = "Order_date", nullable = false, columnDefinition = "timestamp default now()")
 	private LocalDateTime orderDate;
 
-	@Column(name = "ShippedDate")
+	@Column(name = "Shipped_date")
 	private LocalDateTime shippedDate;
 
 	@ManyToOne
-	@JoinColumn(name = "UserID")
+	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(name = "Total")
+	@Column(name = "total")
 	private Long total;
 
-	@Column(name = "TransactionType")
+	@Column(name = "transaction_type")
 	private Short transactionType;
 
-	@Column(name = "AddressShip")
+	@Column(name = "address_ship")
 	private String addressShip;
 
-	@Column(name = "Status")
+	@Column(name = "status")
 	private Short status;
 
 	@ManyToOne
-	@JoinColumn(name = "StoreId")
+	@JoinColumn(name = "store_id")
 	private Service store;
 
 	@OneToMany(mappedBy = "order")

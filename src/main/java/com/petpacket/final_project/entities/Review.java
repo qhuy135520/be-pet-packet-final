@@ -9,20 +9,24 @@ public class Review {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "review_id")
 	private Integer reviewId;
 
 	@ManyToOne
-	@JoinColumn(name = "serviceId", nullable = false)
+	@JoinColumn(name = "service_id", nullable = false)
 	private Service service;
 
 	@ManyToOne
-	@JoinColumn(name = "userId", nullable = false)
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
+	@Column(name = "rating")
 	private Integer rating;
+	
+	@Column(name = "review_text")
 	private String reviewText;
 
-	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", name = "review_date")
 	private Timestamp reviewDate;
 
 	public Review() {

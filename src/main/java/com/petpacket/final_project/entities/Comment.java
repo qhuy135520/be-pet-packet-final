@@ -16,24 +16,25 @@ import jakarta.persistence.Table;
 public class Comment {
 
 	@Id
+	@Column(name = "comment_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer commentId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "content")
 	private String content;
 
-	@Column(name = "createAt", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(name = "create_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp createAt;
 
-	@Column(name = "updateAt", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(name = "update_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp updateAt;
 
 	@ManyToOne
-	@JoinColumn(name = "serviceId")
+	@JoinColumn(name = "service_id")
 	private Service service;
 
 	@ManyToOne
-	@JoinColumn(name = "userId", nullable = false)
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	public Comment() {

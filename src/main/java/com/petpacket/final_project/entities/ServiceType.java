@@ -16,13 +16,19 @@ public class ServiceType {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "service_type_id")
 	private Integer serviceTypeId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "service_type_name")
 	private String serviceTypeName;
 
+	@Column(name = "description")
 	private String description;
+	
+	@Column(name = "service_image")
 	private String serviceImage;
+	
+	@Column(name = "status")
 	private Integer status;
 
 	@OneToMany(mappedBy = "serviceType")

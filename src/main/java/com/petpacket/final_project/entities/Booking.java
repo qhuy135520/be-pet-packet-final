@@ -18,28 +18,38 @@ import jakarta.persistence.Table;
 public class Booking {
 
 	@Id
+	@Column(name = "booking_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer bookingId;
 
 	@ManyToOne
-	@JoinColumn(name = "userId", nullable = false)
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "petId", nullable = false)
+	@JoinColumn(name = "pet_id", nullable = false)
 	private Pet pet;
 
 	@ManyToOne
-	@JoinColumn(name = "serviceId", nullable = false)
+	@JoinColumn(name = "service_id", nullable = false)
 	private Service service;
 
-	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", name = "booking_date")
 	private Timestamp bookingDate;
 
+	@Column(name = "start_booking")
 	private Timestamp startBooking;
+	
+	@Column(name = "end_booking")
 	private Timestamp endBooking;
+	
+	@Column(name = "note")
 	private String note;
+	
+	@Column(name = "total_price")
 	private Float totalPrice;
+	
+	@Column(name = "status_paid")
 	private Boolean statusPaid;
 
 	@OneToMany(mappedBy = "booking")

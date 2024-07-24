@@ -9,12 +9,16 @@ public class PetType {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "pet_type_id")
 	private Integer petTypeId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "pet_type_name")
 	private String petTypeName;
 
+	@Column(name = "weight_from")
 	private Integer weightFrom;
+	
+	@Column(name = "weight_to")
 	private Integer weightTo;
 
 	@OneToMany(mappedBy = "petType")

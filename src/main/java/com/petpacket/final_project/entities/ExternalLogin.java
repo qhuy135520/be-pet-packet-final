@@ -6,21 +6,25 @@ import jakarta.persistence.*;
 @Table(name = "\"ExternalLogin\"", schema = "public")
 public class ExternalLogin {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
-    private User user;
+	private Integer id;
 
-    @Column(nullable = false)
-    private String provider;
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-    @Column(nullable = false)
-    private String providerKey;
-public ExternalLogin() {
-}
+	@Column(nullable = false, name = "provider")
+	private String provider;
+
+	@Column(nullable = false, name = "provider_key")
+	private String providerKey;
+
+	public ExternalLogin() {
+	}
+
 	public ExternalLogin(Integer id, User user, String provider, String providerKey) {
 		super();
 		this.id = id;
@@ -28,30 +32,37 @@ public ExternalLogin() {
 		this.provider = provider;
 		this.providerKey = providerKey;
 	}
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public User getUser() {
 		return user;
 	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 	public String getProvider() {
 		return provider;
 	}
+
 	public void setProvider(String provider) {
 		this.provider = provider;
 	}
+
 	public String getProviderKey() {
 		return providerKey;
 	}
+
 	public void setProviderKey(String providerKey) {
 		this.providerKey = providerKey;
 	}
 
-    
 }

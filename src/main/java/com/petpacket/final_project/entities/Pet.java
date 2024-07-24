@@ -8,21 +8,27 @@ public class Pet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pet_id")
     private Integer petId;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "pet_name")
     private String petName;
 
     @ManyToOne
-    @JoinColumn(name = "petTypeId", nullable = false)
+    @JoinColumn(name = "pet_type_id", nullable = false)
     private PetType petType;
 
+    @Column(name = "gender")
     private Integer gender;
+    
+    @Column(name = "pet_image")
     private String petImage;
+    
+    @Column(name = "status")
     private String status;
 
     public Pet() {

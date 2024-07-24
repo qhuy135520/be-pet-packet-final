@@ -2,6 +2,7 @@ package com.petpacket.final_project.entities;
 
 import java.sql.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,20 +16,25 @@ import jakarta.persistence.Table;
 public class ServicePrice {
 
 	@Id
+	@Column(name = "service_price_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer servicePriceId;
 
 	@ManyToOne
-	@JoinColumn(name = "serviceId", nullable = false)
+	@JoinColumn(name = "service_id", nullable = false)
 	private Service service;
 
+	@Column(name = "start_date")
 	private Date startDate;
+	
+	@Column(name = "end_date")
 	private Date endDate;
 
 	@ManyToOne
-	@JoinColumn(name = "petTypeId")
+	@JoinColumn(name = "pet_type_id")
 	private PetType petType;
 
+	@Column(name = "number_price")
 	private Float numberPrice;
 
 	public ServicePrice() {

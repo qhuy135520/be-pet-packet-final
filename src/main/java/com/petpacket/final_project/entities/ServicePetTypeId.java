@@ -8,17 +8,14 @@ public class ServicePetTypeId implements Serializable {
     private Integer serviceId;
     private Integer petTypeId;
 
-    // Constructor mặc định
     public ServicePetTypeId() {
     }
 
-    // Constructor với tham số
     public ServicePetTypeId(Integer serviceId, Integer petTypeId) {
         this.serviceId = serviceId;
         this.petTypeId = petTypeId;
     }
 
-    // Getter và Setter
     public Integer getServiceId() {
         return serviceId;
     }

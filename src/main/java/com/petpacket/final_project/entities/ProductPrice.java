@@ -2,6 +2,7 @@ package com.petpacket.final_project.entities;
 
 import java.sql.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,14 +17,20 @@ public class ProductPrice {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "product_price_id")
 	private Integer productPriceId;
 
 	@ManyToOne
-	@JoinColumn(name = "productId", nullable = false)
+	@JoinColumn(name = "product_id", nullable = false)
 	private ServiceStore product;
 
+	@Column(name = "start_date")
 	private Date startDate;
+	
+	@Column(name = "end_date")
 	private Date endDate;
+	
+	@Column(name = "number_price")
 	private Float numberPrice;
 
 	public ProductPrice() {

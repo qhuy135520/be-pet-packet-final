@@ -8,25 +8,31 @@ public class ServiceStore {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "product_id")
 	private Integer productId;
 
 	@ManyToOne
-	@JoinColumn(name = "serviceId", nullable = false)
+	@JoinColumn(name = "service_id", nullable = false)
 	private Service service;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "product_name")
 	private String productName;
 
+	@Column(name = "product_image")
 	private String productImage;
+	
+	@Column(name = "description")
 	private String description;
+
+	@Column(name = "product_discount")
 	private Float productDiscount;
 
 	@ManyToOne
-	@JoinColumn(name = "categoryId")
+	@JoinColumn(name = "category_id")
 	private ProductCategory category;
 
 	@ManyToOne
-	@JoinColumn(name = "statusId")
+	@JoinColumn(name = "status_id")
 	private ProductStatus status;
 
 	public ServiceStore() {

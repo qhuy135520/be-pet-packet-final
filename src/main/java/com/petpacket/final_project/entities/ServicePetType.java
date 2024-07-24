@@ -1,5 +1,6 @@
 package com.petpacket.final_project.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -11,25 +12,25 @@ import jakarta.persistence.Table;
 public class ServicePetType {
 
     @Id
+    @Column(name = "service_id")
     private Integer serviceId;
 
     @Id
+    @Column(name = "pet_type_id")
     private Integer petTypeId;
 
+    @Column(name = "nothing")
     private String nothing;
 
-    // Constructor mặc định
     public ServicePetType() {
     }
 
-    // Constructor với tham số
     public ServicePetType(Integer serviceId, Integer petTypeId, String nothing) {
         this.serviceId = serviceId;
         this.petTypeId = petTypeId;
         this.nothing = nothing;
     }
 
-    // Getter và Setter
     public Integer getServiceId() {
         return serviceId;
     }
