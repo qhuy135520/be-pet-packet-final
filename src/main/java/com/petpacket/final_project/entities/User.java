@@ -37,8 +37,9 @@ public class User {
 	@Column(name = "user_image")
 	private String userImage;
 	
-	@Column(name = "role_id")
-	private Integer roleId;
+	@ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+	private Role role;
 	
 	@Column(name = "address")
 	private String address;
@@ -74,7 +75,7 @@ public class User {
 	}
 
 	public User(Integer userId, String userName, String password, String fullName, Integer gender, String email,
-			String userImage, Integer roleId, String address, String phone, Integer status, String loginProvider,
+			String userImage, Role role, String address, String phone, Integer status, String loginProvider,
 			List<ExternalLogin> externalLogins, List<Pet> pets, List<Service> services, List<Review> reviews,
 			List<Comment> comments, List<Booking> bookings) {
 		super();
@@ -85,7 +86,7 @@ public class User {
 		this.gender = gender;
 		this.email = email;
 		this.userImage = userImage;
-		this.roleId = roleId;
+		this.role = role;
 		this.address = address;
 		this.phone = phone;
 		this.status = status;
@@ -154,12 +155,12 @@ public class User {
 		this.userImage = userImage;
 	}
 
-	public Integer getRoleId() {
-		return roleId;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public String getAddress() {
@@ -242,4 +243,5 @@ public class User {
 		this.bookings = bookings;
 	}
 
+	
 }
