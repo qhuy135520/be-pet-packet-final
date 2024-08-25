@@ -2,6 +2,9 @@ package com.petpacket.final_project.entities;
 
 import java.sql.Timestamp;
 
+import com.petpacket.final_project.entities.service.Service;
+import com.petpacket.final_project.entities.user.User;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

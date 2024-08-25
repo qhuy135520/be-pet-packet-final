@@ -3,6 +3,9 @@ package com.petpacket.final_project.entities;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 
+import com.petpacket.final_project.entities.service.Service;
+import com.petpacket.final_project.entities.user.User;
+
 @Entity
 @Table(name = "\"Review\"", schema = "public")
 public class Review {
