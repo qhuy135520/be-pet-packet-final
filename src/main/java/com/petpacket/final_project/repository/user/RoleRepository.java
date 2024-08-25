@@ -11,4 +11,5 @@ import com.petpacket.final_project.entities.user.Role;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
 	 Optional<Role> findByRoleName(ERole roleName);
+	 Role findByRoleName(String roleName);
 }

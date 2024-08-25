@@ -19,46 +19,49 @@ import com.petpacket.final_project.dto.AuthTokenFilter;
 import com.petpacket.final_project.services.AuthEntryPointJwt;
 import com.petpacket.final_project.services.UserDetailsServiceImpl;
 
+@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
-    private UserDetailsServiceImpl userDetailsService;
-    private AuthEntryPointJwt authEntryPointJwt;
-    private AuthTokenFilter authTokenFilter;
+	private UserDetailsServiceImpl userDetailsService;
+	private AuthEntryPointJwt authEntryPointJwt;
+	private AuthTokenFilter authTokenFilter;
 
-    public SecurityConfiguration(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt authEntryPointJwt, AuthTokenFilter authTokenFilter) {
-        this.userDetailsService = userDetailsService;
-        this.authEntryPointJwt = authEntryPointJwt;
-        this.authTokenFilter = authTokenFilter;
-    }
+	public SecurityConfiguration(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt authEntryPointJwt,
+			AuthTokenFilter authTokenFilter) {
+		this.userDetailsService = userDetailsService;
+		this.authEntryPointJwt = authEntryPointJwt;
+		this.authTokenFilter = authTokenFilter;
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
 
-    @Bean
-    @Primary
-    public AuthenticationManagerBuilder configureAuthenticationManagerBuilder(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        return authenticationManagerBuilder;
-    }
+	@Bean
+	@Primary
+	public AuthenticationManagerBuilder configureAuthenticationManagerBuilder(
+			AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+		authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+		return authenticationManagerBuilder;
+	}
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(authEntryPointJwt).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/test/**").permitAll()
-                .anyRequest().authenticated();
-        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+	@SuppressWarnings("removal")
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(authEntryPointJwt).and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+				.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/test/**").permitAll().anyRequest()
+				.authenticated();
+		http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
+		return http.build();
+	}
 }

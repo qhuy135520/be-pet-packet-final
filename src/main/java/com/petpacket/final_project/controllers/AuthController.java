@@ -1,16 +1,17 @@
 package com.petpacket.final_project.controllers;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.management.relation.RoleNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,19 +52,30 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody SignInRequest signInRequest) {
+    public ResponseEntity<?> signin(@RequestBody SignInRequest signInRequest) throws RoleNotFoundException {
+//    	if(!userRepository.existsByUserNameAndPassword(signInRequest.getUserName(), passwordEncoder.encode(signInRequest.getPassword()))) {
+//    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("username or password is incorrect");
+//    	}
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUserName(), signInRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtil.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+        
+        String roleName = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority) 
+                .findFirst()
+                .orElse("ROLE_CUSTOMER"); 
+
         JwtResponse res = new JwtResponse();
         res.setToken(jwt);
         res.setUserId(userDetails.getId());
         res.setUserName(userDetails.getUsername());
-        res.setRoles(roles);
+        res.setEmail(userDetails.getEmail());
+        res.setGender(userDetails.getGender());
+        res.setPhone(userDetails.getPhone());
+        res.setStatus(userDetails.getStatus());
+        res.setAddress(userDetails.getAddress());
+        res.setRole(roleName);
         return ResponseEntity.ok(res);
     }
 
@@ -76,17 +88,39 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("email is already taken");
         }
         String hashedPassword = passwordEncoder.encode(signUpRequest.getPassword());
-        Set<Role> roles = new HashSet<>();
+        
         Optional<Role> userRole = roleRepository.findByRoleName(ERole.ROLE_CUSTOMER);
         if (userRole.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("role not found");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Role not found");
         }
-        roles.add(userRole.get());
+        
+        String userFullName = signUpRequest.getFullName();
+        if(userFullName.isBlank() || userFullName.isEmpty()) {
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("name is invalid");
+        }
+        String userPhone = signUpRequest.getPhone();
+        if(userPhone.isBlank() || userPhone.isEmpty()) {
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("phone is invalid");
+        }
+        String userAddress = signUpRequest.getAddress();
+        if(userAddress.isBlank() || userAddress.isEmpty()) {
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("address is invalid");
+        }
+        Integer userGender = signUpRequest.getGender();
+        if(userGender == null) {
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("gender is invalid");
+        }
+        
         User user = new User();
         user.setUserName(signUpRequest.getUserName());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(hashedPassword);
-        user.setRoles(roles);
+        user.setRole(userRole.get());
+        user.setAddress(userAddress);
+        user.setPhone(userPhone);
+        user.setGender(userGender);
+        user.setFullName(userFullName);
+        user.setStatus(signUpRequest.getStatus());
         userRepository.save(user);
         return ResponseEntity.ok("User registered success");
     }

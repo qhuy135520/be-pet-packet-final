@@ -1,6 +1,7 @@
 package com.petpacket.final_project.entities.user;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,16 +23,20 @@ public class Role {
 	private Integer roleId;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, name = "role_name")
-	private ERole roleName;
+    @Column(nullable = false, name = "role_name")
+    private ERole roleName;
+	
+	@OneToMany(mappedBy = "role")
+    private Set<User> users = new HashSet<>();
 
 	public Role() {
 	}
 
-	public Role(Integer roleId, ERole roleName) {
+	public Role(Integer roleId, ERole roleName, Set<User> users) {
 		super();
 		this.roleId = roleId;
 		this.roleName = roleName;
+		this.users = users;
 	}
 
 	public Integer getRoleId() {
@@ -49,5 +54,15 @@ public class Role {
 	public void setRoleName(ERole roleName) {
 		this.roleName = roleName;
 	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	
 
 }

@@ -46,11 +46,9 @@ public class User {
 	@Column(name = "user_image")
 	private String userImage;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "role",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name="role_id"))
-    private Set<Role> roles = new HashSet<>();
+	@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 	
 	@Column(name = "address")
 	private String address;
@@ -86,7 +84,7 @@ public class User {
 	}
 
 	public User(Integer userId, String userName, String password, String fullName, Integer gender, String email,
-			String userImage, Set<Role> roles, String address, String phone, Integer status, String loginProvider,
+			String userImage, Role role, String address, String phone, Integer status, String loginProvider,
 			List<ExternalLogin> externalLogins, List<Pet> pets, List<Service> services, List<Review> reviews,
 			List<Comment> comments, List<Booking> bookings) {
 		super();
@@ -97,7 +95,7 @@ public class User {
 		this.gender = gender;
 		this.email = email;
 		this.userImage = userImage;
-		this.roles = roles;
+		this.role = role;
 		this.address = address;
 		this.phone = phone;
 		this.status = status;
@@ -166,12 +164,12 @@ public class User {
 		this.userImage = userImage;
 	}
 
-	public Set<Role> getRoles() {
-		return roles;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public String getAddress() {
