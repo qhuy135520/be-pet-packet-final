@@ -199,6 +199,7 @@ public class AuthController {
 		} else if (!inputOtp.equals(sessionOtp)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP is invalid");
 		} else {
+			session.setAttribute("verifiedEmail", email);
 			return ResponseEntity.ok("OTP is valid, please reset your password");
 		}
 	}
@@ -206,7 +207,7 @@ public class AuthController {
 	@PostMapping("/reset-password")
 	public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest,
 			HttpSession session) {
-		String email = (String) session.getAttribute("emailResetPassword");
+		String email = (String) session.getAttribute("verifiedEmail");
 		if (email == null || !email.equals(resetPasswordRequest.getEmail())) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("email not verified");
 		}
@@ -224,6 +225,7 @@ public class AuthController {
 
 		session.removeAttribute("otpResetPassword");
 		session.removeAttribute("emailResetPassword");
+		session.removeAttribute("vefifiedEmail");
 
 		return ResponseEntity.ok("password updated successfully");
 	}
