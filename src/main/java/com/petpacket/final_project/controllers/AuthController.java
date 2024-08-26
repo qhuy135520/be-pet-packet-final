@@ -149,7 +149,7 @@ public class AuthController {
 
 		Optional<Role> userRole = roleRepository.findByRoleName(ERole.ROLE_CUSTOMER);
 		if (userRole.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("r	ole not found");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("role not found");
 		}
 
 		User user = new User();
