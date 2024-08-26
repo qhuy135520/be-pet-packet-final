@@ -42,7 +42,6 @@ public class JwtUtil {
 		return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject();
 	}
 
-	@SuppressWarnings({ })
 	public boolean validateJwtToken(String authToken) {
 		try {
 			Jwts.parser().setSigningKey(key).parseClaimsJws(authToken);

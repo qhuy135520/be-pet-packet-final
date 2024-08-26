@@ -1,8 +1,6 @@
 package com.petpacket.final_project.controllers;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.management.relation.RoleNotFoundException;
 
@@ -11,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,9 +52,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody SignInRequest signInRequest) throws RoleNotFoundException {
-//    	if(!userRepository.existsByUserNameAndPassword(signInRequest.getUserName(), passwordEncoder.encode(signInRequest.getPassword()))) {
-//    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("username or password is incorrect");
-//    	}
+    	try {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUserName(), signInRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtil.generateJwtToken(authentication);
@@ -76,7 +73,11 @@ public class AuthController {
         res.setStatus(userDetails.getStatus());
         res.setAddress(userDetails.getAddress());
         res.setRole(roleName);
+        res.setFullName(userDetails.getFullName());
         return ResponseEntity.ok(res);
+    	}catch(AuthenticationException e) {
+    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("username or password is incorrect");
+    	}
     }
 
     @PostMapping("/signup")

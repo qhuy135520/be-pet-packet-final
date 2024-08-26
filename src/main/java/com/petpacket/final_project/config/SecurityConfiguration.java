@@ -27,12 +27,14 @@ public class SecurityConfiguration {
 	private UserDetailsServiceImpl userDetailsService;
 	private AuthEntryPointJwt authEntryPointJwt;
 	private AuthTokenFilter authTokenFilter;
+	private CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	public SecurityConfiguration(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt authEntryPointJwt,
-			AuthTokenFilter authTokenFilter) {
+			AuthTokenFilter authTokenFilter, CustomAccessDeniedHandler customAccessDeniedHandler) {
 		this.userDetailsService = userDetailsService;
 		this.authEntryPointJwt = authEntryPointJwt;
 		this.authTokenFilter = authTokenFilter;
+		this.customAccessDeniedHandler = customAccessDeniedHandler;
 	}
 
 	@Bean
@@ -57,7 +59,7 @@ public class SecurityConfiguration {
 	@SuppressWarnings("removal")
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(authEntryPointJwt).and()
+		http.cors().and().csrf().disable().exceptionHandling().accessDeniedHandler(customAccessDeniedHandler).authenticationEntryPoint(authEntryPointJwt).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
 				.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/test/**").permitAll().anyRequest()
 				.authenticated();
