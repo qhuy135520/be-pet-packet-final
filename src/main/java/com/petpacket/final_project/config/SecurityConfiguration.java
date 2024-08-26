@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.petpacket.final_project.dto.AuthTokenFilter;
+import com.petpacket.final_project.dto.authentication.AuthTokenFilter;
 import com.petpacket.final_project.services.AuthEntryPointJwt;
 import com.petpacket.final_project.services.UserDetailsServiceImpl;
 

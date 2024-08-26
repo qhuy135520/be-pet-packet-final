@@ -1,4 +1,4 @@
-package com.petpacket.final_project.dto;
+package com.petpacket.final_project.dto.authentication;
 
 public class OtpRequest {
     private String email;

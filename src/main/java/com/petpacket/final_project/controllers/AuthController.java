@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.petpacket.final_project.dto.ForgotPasswordRequest;
-import com.petpacket.final_project.dto.JwtResponse;
-import com.petpacket.final_project.dto.OtpRequest;
-import com.petpacket.final_project.dto.ResetPasswordRequest;
-import com.petpacket.final_project.dto.SignInRequest;
-import com.petpacket.final_project.dto.SignUpRequest;
+import com.petpacket.final_project.dto.authentication.ForgotPasswordRequest;
+import com.petpacket.final_project.dto.authentication.JwtResponse;
+import com.petpacket.final_project.dto.authentication.OtpRequest;
+import com.petpacket.final_project.dto.authentication.ResetPasswordRequest;
+import com.petpacket.final_project.dto.authentication.SignInRequest;
+import com.petpacket.final_project.dto.authentication.SignUpRequest;
 import com.petpacket.final_project.entities.user.ERole;
 import com.petpacket.final_project.entities.user.Role;
 import com.petpacket.final_project.entities.user.User;

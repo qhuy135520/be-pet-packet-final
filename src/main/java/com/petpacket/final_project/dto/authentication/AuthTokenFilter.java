@@ -1,4 +1,4 @@
-package com.petpacket.final_project.dto;
+package com.petpacket.final_project.dto.authentication;
 
 import java.io.IOException;
 
