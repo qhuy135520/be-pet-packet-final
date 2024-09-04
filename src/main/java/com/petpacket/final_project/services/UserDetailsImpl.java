@@ -18,23 +18,24 @@ public class UserDetailsImpl implements UserDetails {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Integer userId;
-	@JsonIgnore
-	private String userName;
+	private String username;
 	private String email;
+	@JsonIgnore
 	private String password;
 	private String address;
 	private String fullName;
 	private Integer gender;
 	private String phone;
 	private Integer status;
+	private String image;
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(Integer userId, String userName, String email, String password, String address,
-			String fullName, Integer gender, String phone, Integer status,
+	public UserDetailsImpl(Integer userId, String username, String email, String password, String address,
+			String fullName, Integer gender, String phone, Integer status, String image,
 			Collection<? extends GrantedAuthority> authorities) {
 		super();
 		this.userId = userId;
-		this.userName = userName;
+		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.address = address;
@@ -42,14 +43,16 @@ public class UserDetailsImpl implements UserDetails {
 		this.gender = gender;
 		this.phone = phone;
 		this.status = status;
+		this.image = image;
 		this.authorities = authorities;
+
 	}
 
 	public static UserDetailsImpl build(User user) {
 		GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getRoleName().name());
-		return new UserDetailsImpl(user.getUserId(), user.getUserName(), user.getEmail(), user.getPassword(),
+		return new UserDetailsImpl(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(),
 				user.getAddress(), user.getFullName(), user.getGender(), user.getPhone(), user.getStatus(),
-				Collections.singletonList(authority));
+				user.getUserImage(), Collections.singletonList(authority));
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return userName;
+		return username;
 	}
 
 	public Integer getUserId() {
@@ -75,12 +78,8 @@ public class UserDetailsImpl implements UserDetails {
 		this.userId = userId;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getEmail() {
@@ -161,6 +160,14 @@ public class UserDetailsImpl implements UserDetails {
 
 	public Integer getId() {
 		return userId;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 }

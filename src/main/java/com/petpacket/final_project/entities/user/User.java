@@ -29,7 +29,7 @@ public class User {
 	private Integer userId;
 
 	@Column(nullable = false, name = "user_name")
-	private String userName;
+	private String username;
 
 	@Column(nullable = false, name = "password")
 	private String password;
@@ -83,13 +83,13 @@ public class User {
 	public User() {
 	}
 
-	public User(Integer userId, String userName, String password, String fullName, Integer gender, String email,
+	public User(Integer userId, String username, String password, String fullName, Integer gender, String email,
 			String userImage, Role role, String address, String phone, Integer status, String loginProvider,
 			List<ExternalLogin> externalLogins, List<Pet> pets, List<Service> services, List<Review> reviews,
 			List<Comment> comments, List<Booking> bookings) {
 		super();
 		this.userId = userId;
-		this.userName = userName;
+		this.username = username;
 		this.password = password;
 		this.fullName = fullName;
 		this.gender = gender;
@@ -116,12 +116,12 @@ public class User {
 		this.userId = userId;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {

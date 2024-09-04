@@ -59,7 +59,7 @@ public class AuthController {
 	public ResponseEntity<?> signin(@RequestBody SignInRequest signInRequest) throws RoleNotFoundException {
 		try {
 			Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(signInRequest.getUserName(), signInRequest.getPassword()));
+					new UsernamePasswordAuthenticationToken(signInRequest.getUsername(), signInRequest.getPassword()));
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			String jwt = jwtUtil.generateJwtToken(authentication);
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -70,7 +70,7 @@ public class AuthController {
 			JwtResponse res = new JwtResponse();
 			res.setToken(jwt);
 			res.setUserId(userDetails.getId());
-			res.setUserName(userDetails.getUsername());
+			res.setUsername(userDetails.getUsername());
 			res.setEmail(userDetails.getEmail());
 			res.setGender(userDetails.getGender());
 			res.setPhone(userDetails.getPhone());
@@ -86,7 +86,7 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody SignUpRequest signUpRequest, HttpSession session) {
-		if (userRepository.existsByUserName(signUpRequest.getUserName())) {
+		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("username is already taken");
 		}
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
@@ -121,21 +121,10 @@ public class AuthController {
 		session.setAttribute("signUpRequest", signUpRequest);
 		session.setMaxInactiveInterval(5 * 60);
 
-//        User user = new User();
-//        user.setUserName(signUpRequest.getUserName());
-//        user.setEmail(signUpRequest.getEmail());
-//        user.setPassword(hashedPassword);
-//        user.setRole(userRole.get());
-//        user.setAddress(userAddress);
-//        user.setPhone(userPhone);
-//        user.setGender(userGender);
-//        user.setFullName(userFullName);
-//        user.setStatus(signUpRequest.getStatus());
-//        userRepository.save(user);
 		return ResponseEntity.ok("OTP sended");
 	}
 
-	@PostMapping("/verify-otp-register")
+	@PostMapping("/verify-otp-signup")
 	public ResponseEntity<?> verifyOtpRegister(@RequestBody OtpRequest otpRequest, HttpSession session) {
 		if (!otpService.validateOtp(otpRequest.getEmail(), otpRequest.getOtp())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP is incorrect");
@@ -153,7 +142,7 @@ public class AuthController {
 		}
 
 		User user = new User();
-		user.setUserName(signUpRequest.getUserName());
+		user.setUsername(signUpRequest.getUsername());
 		user.setEmail(signUpRequest.getEmail());
 		user.setPassword(hashedPassword);
 		user.setRole(userRole.get());

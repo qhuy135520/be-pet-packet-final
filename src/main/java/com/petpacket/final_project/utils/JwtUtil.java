@@ -23,28 +23,28 @@ import lombok.extern.log4j.Log4j2;
 @Component
 @Log4j2
 public class JwtUtil {
-//	@Value("${petserviceconnect.app.jwtSecret}")
-//	private String jwtSecret;
+	@Value("${petserviceconnect.app.jwtSecret}")
+	private String jwtSecret;
 
 	@Value("${petserviceconnect.app.jwtExpirationMs}")
 	private int jwtExpirationMs;
 	
-	private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+//	private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
 	public String generateJwtToken(Authentication authentication) {
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 		return Jwts.builder().setSubject((userPrincipal.getUsername())).setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-				.signWith(key).compact();
+				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
 	}
 
-	public String getUserNameFromJwtToken(String token) {
-		return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject();
+	public String getUsernameFromJwtToken(String token) {
+		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
 	}
 
 	public boolean validateJwtToken(String authToken) {
 		try {
-			Jwts.parser().setSigningKey(key).parseClaimsJws(authToken);
+			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
 			return true;
 		} catch (SignatureException e) {
 //            log.error("Invalid JWT signature: {}", e.getMessage());
