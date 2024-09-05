@@ -27,8 +27,8 @@ public class Pet {
     @Column(name = "gender")
     private Integer gender;
     
-    @Column(name = "pet_image")
-    private String petImage;
+    @Column(name = "pet_picture")
+    private String petPicture;
     
     @Column(name = "status")
     private String status;
@@ -36,7 +36,7 @@ public class Pet {
     public Pet() {
 	}
 
-	public Pet(Integer petId, User user, String petName, PetType petType, Integer gender, String petImage,
+	public Pet(Integer petId, User user, String petName, PetType petType, Integer gender, String petPicture,
 			String status) {
 		super();
 		this.petId = petId;
@@ -44,7 +44,7 @@ public class Pet {
 		this.petName = petName;
 		this.petType = petType;
 		this.gender = gender;
-		this.petImage = petImage;
+		this.petPicture = petPicture;
 		this.status = status;
 	}
 
@@ -88,12 +88,12 @@ public class Pet {
 		this.gender = gender;
 	}
 
-	public String getPetImage() {
-		return petImage;
+	public String getPetPicture() {
+		return petPicture;
 	}
 
-	public void setPetImage(String petImage) {
-		this.petImage = petImage;
+	public void setPetPicture(String petPicture) {
+		this.petPicture = petPicture;
 	}
 
 	public String getStatus() {

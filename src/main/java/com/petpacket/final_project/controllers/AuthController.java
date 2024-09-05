@@ -7,6 +7,8 @@ import javax.management.relation.RoleNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -18,12 +20,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.petpacket.final_project.dto.ErrorResponse;
+import com.petpacket.final_project.dto.SuccessResponse;
 import com.petpacket.final_project.dto.authentication.ForgotPasswordRequest;
 import com.petpacket.final_project.dto.authentication.JwtResponse;
 import com.petpacket.final_project.dto.authentication.OtpRequest;
 import com.petpacket.final_project.dto.authentication.ResetPasswordRequest;
 import com.petpacket.final_project.dto.authentication.SignInRequest;
 import com.petpacket.final_project.dto.authentication.SignUpRequest;
+import com.petpacket.final_project.dto.authentication.UserResponse;
 import com.petpacket.final_project.entities.user.ERole;
 import com.petpacket.final_project.entities.user.Role;
 import com.petpacket.final_project.entities.user.User;
@@ -67,20 +72,40 @@ public class AuthController {
 			String roleName = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst()
 					.orElse("ROLE_CUSTOMER");
 
+			UserResponse userResponse = new UserResponse();
+			userResponse.setUserId(userDetails.getId());
+			userResponse.setUsername(userDetails.getUsername());
+			userResponse.setEmail(userDetails.getEmail());
+			userResponse.setGender(userDetails.getGender());
+			userResponse.setPhone(userDetails.getPhone());
+			userResponse.setStatus(userDetails.getStatus());
+			userResponse.setAddress(userDetails.getAddress());
+			userResponse.setRole(roleName);
+			userResponse.setName(userDetails.getName());
+
 			JwtResponse res = new JwtResponse();
-			res.setToken(jwt);
-			res.setUserId(userDetails.getId());
-			res.setUsername(userDetails.getUsername());
-			res.setEmail(userDetails.getEmail());
-			res.setGender(userDetails.getGender());
-			res.setPhone(userDetails.getPhone());
-			res.setStatus(userDetails.getStatus());
-			res.setAddress(userDetails.getAddress());
-			res.setRole(roleName);
-			res.setFullName(userDetails.getFullName());
-			return ResponseEntity.ok(res);
+			res.setAccess_token(jwt);
+			res.setUser(userResponse);
+			
+			SuccessResponse successResponse = new SuccessResponse();
+			successResponse.setData(res);
+			successResponse.setStatusCode(HttpStatus.OK.value());
+			successResponse.setMessage("Fetch Login");
+
+			return ResponseEntity.ok(successResponse);
+		} catch (LockedException e) {
+			ErrorResponse errorResponse = new ErrorResponse("Account not activated", "Unauthorized",
+					HttpStatus.LOCKED.value());
+			return ResponseEntity.status(HttpStatus.LOCKED).body(errorResponse);
+
+		} catch (BadCredentialsException e) {
+			ErrorResponse errorResponse = new ErrorResponse("Username/Password is incorrect", "Unauthorized",
+					HttpStatus.UNAUTHORIZED.value());
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
 		} catch (AuthenticationException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("username or password is incorrect");
+			ErrorResponse errorResponse = new ErrorResponse("Authentication failed due to an unknown error.",
+					"Authentication Error", HttpStatus.UNAUTHORIZED.value());
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
 		}
 	}
 
@@ -99,8 +124,8 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Role not found");
 		}
 
-		String userFullName = signUpRequest.getFullName();
-		if (userFullName.isBlank() || userFullName.isEmpty()) {
+		String userName = signUpRequest.getName();
+		if (userName == null|| userName.isBlank() || userName.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("name is invalid");
 		}
 		String userPhone = signUpRequest.getPhone();
@@ -149,8 +174,8 @@ public class AuthController {
 		user.setAddress(signUpRequest.getAddress());
 		user.setPhone(signUpRequest.getPhone());
 		user.setGender(signUpRequest.getGender());
-		user.setFullName(signUpRequest.getFullName());
-		user.setStatus(signUpRequest.getStatus());
+		user.setName(signUpRequest.getName());
+		user.setStatus(1);
 		userRepository.save(user);
 
 		otpService.clearOtp(otpRequest.getEmail());

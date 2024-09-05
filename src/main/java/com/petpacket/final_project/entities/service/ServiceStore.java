@@ -21,8 +21,8 @@ public class ServiceStore {
 	@Column(nullable = false, name = "product_name")
 	private String productName;
 
-	@Column(name = "product_image")
-	private String productImage;
+	@Column(name = "product_picture")
+	private String productPicture;
 	
 	@Column(name = "description")
 	private String description;
@@ -41,13 +41,13 @@ public class ServiceStore {
 	public ServiceStore() {
 	}
 
-	public ServiceStore(Integer productId, Service service, String productName, String productImage, String description,
+	public ServiceStore(Integer productId, Service service, String productName, String productPicture, String description,
 			Float productDiscount, ProductCategory category, ProductStatus status) {
 		super();
 		this.productId = productId;
 		this.service = service;
 		this.productName = productName;
-		this.productImage = productImage;
+		this.productPicture = productPicture;
 		this.description = description;
 		this.productDiscount = productDiscount;
 		this.category = category;
@@ -78,12 +78,12 @@ public class ServiceStore {
 		this.productName = productName;
 	}
 
-	public String getProductImage() {
-		return productImage;
+	public String getProductPicture() {
+		return productPicture;
 	}
 
-	public void setProductImage(String productImage) {
-		this.productImage = productImage;
+	public void setProductPicture(String productPicture) {
+		this.productPicture = productPicture;
 	}
 
 	public String getDescription() {

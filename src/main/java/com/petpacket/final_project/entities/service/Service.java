@@ -39,7 +39,7 @@ public class Service {
 	private Integer status;
 
 	@OneToMany(mappedBy = "service")
-	private List<ServiceImage> serviceImages;
+	private List<ServicePicture> servicePictures;
 
 	@OneToMany(mappedBy = "service")
 	private List<ServicePrice> servicePrices;
@@ -64,7 +64,7 @@ public class Service {
 	}
 
 	public Service(Integer serviceId, String serviceName, ServiceType serviceType, String description, User user,
-			String address, Integer status, List<ServiceImage> serviceImages, List<ServicePrice> servicePrices,
+			String address, Integer status, List<ServicePicture> servicePictures, List<ServicePrice> servicePrices,
 			List<ServiceStore> serviceStores, List<Review> reviews, List<Comment> comments, List<Booking> bookings,
 			List<PetType> petTypes) {
 		super();
@@ -75,7 +75,7 @@ public class Service {
 		this.user = user;
 		this.address = address;
 		this.status = status;
-		this.serviceImages = serviceImages;
+		this.servicePictures = servicePictures;
 		this.servicePrices = servicePrices;
 		this.serviceStores = serviceStores;
 		this.reviews = reviews;
@@ -140,12 +140,12 @@ public class Service {
 		this.status = status;
 	}
 
-	public List<ServiceImage> getServiceImages() {
-		return serviceImages;
+	public List<ServicePicture> getServicePictures() {
+		return servicePictures;
 	}
 
-	public void setServiceImages(List<ServiceImage> serviceImages) {
-		this.serviceImages = serviceImages;
+	public void setServicePictures(List<ServicePicture> servicePictures) {
+		this.servicePictures = servicePictures;
 	}
 
 	public List<ServicePrice> getServicePrices() {

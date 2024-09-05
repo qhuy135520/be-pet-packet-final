@@ -35,7 +35,7 @@ public class User {
 	private String password;
 
 	@Column(nullable = false, name = "full_name")
-	private String fullName;
+	private String name;
 
 	@Column(nullable = false, name = "gender")
 	private Integer gender;
@@ -43,8 +43,8 @@ public class User {
 	@Column(unique = true, name = "email")
 	private String email;
 
-	@Column(name = "user_image")
-	private String userImage;
+	@Column(name = "user_picture")
+	private String userPicture;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
@@ -83,18 +83,18 @@ public class User {
 	public User() {
 	}
 
-	public User(Integer userId, String username, String password, String fullName, Integer gender, String email,
-			String userImage, Role role, String address, String phone, Integer status, String loginProvider,
+	public User(Integer userId, String username, String password, String name, Integer gender, String email,
+			String userPicture, Role role, String address, String phone, Integer status, String loginProvider,
 			List<ExternalLogin> externalLogins, List<Pet> pets, List<Service> services, List<Review> reviews,
 			List<Comment> comments, List<Booking> bookings) {
 		super();
 		this.userId = userId;
 		this.username = username;
 		this.password = password;
-		this.fullName = fullName;
+		this.name = name;
 		this.gender = gender;
 		this.email = email;
-		this.userImage = userImage;
+		this.userPicture = userPicture;
 		this.role = role;
 		this.address = address;
 		this.phone = phone;
@@ -132,12 +132,12 @@ public class User {
 		this.password = password;
 	}
 
-	public String getFullName() {
-		return fullName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Integer getGender() {
@@ -156,12 +156,12 @@ public class User {
 		this.email = email;
 	}
 
-	public String getUserImage() {
-		return userImage;
+	public String getUserPicture() {
+		return userPicture;
 	}
 
-	public void setUserImage(String userImage) {
-		this.userImage = userImage;
+	public void setUserPicture(String userPicture) {
+		this.userPicture = userPicture;
 	}
 
 	public Role getRole() {

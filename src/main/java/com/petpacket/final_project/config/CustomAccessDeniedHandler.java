@@ -1,11 +1,8 @@
 package com.petpacket.final_project.config;
 
-import java.nio.file.AccessDeniedException;
-
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

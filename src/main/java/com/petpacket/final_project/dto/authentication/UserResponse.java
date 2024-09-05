@@ -1,16 +1,24 @@
 package com.petpacket.final_project.dto.authentication;
 
-import lombok.Data;
-
-@Data
-public class SignUpRequest {
+public class UserResponse {
+	private Integer userId;
 	private String username;
 	private String email;
-	private String password;
 	private String address;
 	private String name;
 	private Integer gender;
 	private String phone;
+	private Integer status;
+	private String role;
+	private String picture;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 
 	public String getUsername() {
 		return username;
@@ -26,14 +34,6 @@ public class SignUpRequest {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getAddress() {
@@ -67,5 +67,30 @@ public class SignUpRequest {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+
 
 }

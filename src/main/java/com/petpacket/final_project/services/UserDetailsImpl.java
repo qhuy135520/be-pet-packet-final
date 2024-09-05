@@ -23,15 +23,15 @@ public class UserDetailsImpl implements UserDetails {
 	@JsonIgnore
 	private String password;
 	private String address;
-	private String fullName;
+	private String name;
 	private Integer gender;
 	private String phone;
 	private Integer status;
-	private String image;
+	private String picture;
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserDetailsImpl(Integer userId, String username, String email, String password, String address,
-			String fullName, Integer gender, String phone, Integer status, String image,
+			String name, Integer gender, String phone, Integer status, String picture,
 			Collection<? extends GrantedAuthority> authorities) {
 		super();
 		this.userId = userId;
@@ -39,11 +39,11 @@ public class UserDetailsImpl implements UserDetails {
 		this.email = email;
 		this.password = password;
 		this.address = address;
-		this.fullName = fullName;
+		this.name = name;
 		this.gender = gender;
 		this.phone = phone;
 		this.status = status;
-		this.image = image;
+		this.picture = picture;
 		this.authorities = authorities;
 
 	}
@@ -51,8 +51,8 @@ public class UserDetailsImpl implements UserDetails {
 	public static UserDetailsImpl build(User user) {
 		GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getRoleName().name());
 		return new UserDetailsImpl(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(),
-				user.getAddress(), user.getFullName(), user.getGender(), user.getPhone(), user.getStatus(),
-				user.getUserImage(), Collections.singletonList(authority));
+				user.getAddress(), user.getName(), user.getGender(), user.getPhone(), user.getStatus(),
+				user.getUserPicture(), Collections.singletonList(authority));
 	}
 
 	@Override
@@ -98,12 +98,12 @@ public class UserDetailsImpl implements UserDetails {
 		this.address = address;
 	}
 
-	public String getFullName() {
-		return fullName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Integer getGender() {
@@ -145,7 +145,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		return this.status == 1 ? true : false;
 	}
 
 	@Override
@@ -162,12 +162,14 @@ public class UserDetailsImpl implements UserDetails {
 		return userId;
 	}
 
-	public String getImage() {
-		return image;
+	public String getPicture() {
+		return picture;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
+
+
 
 }

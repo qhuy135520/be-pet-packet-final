@@ -25,8 +25,8 @@ public class ServiceType {
 	@Column(name = "description")
 	private String description;
 	
-	@Column(name = "service_image")
-	private String serviceImage;
+	@Column(name = "service_picture")
+	private String servicePicture;
 	
 	@Column(name = "status")
 	private Integer status;
@@ -37,13 +37,13 @@ public class ServiceType {
 	public ServiceType() {
 	}
 
-	public ServiceType(Integer serviceTypeId, String serviceTypeName, String description, String serviceImage,
+	public ServiceType(Integer serviceTypeId, String serviceTypeName, String description, String servicePicture,
 			Integer status, List<Service> services) {
 		super();
 		this.serviceTypeId = serviceTypeId;
 		this.serviceTypeName = serviceTypeName;
 		this.description = description;
-		this.serviceImage = serviceImage;
+		this.servicePicture = servicePicture;
 		this.status = status;
 		this.services = services;
 	}
@@ -72,12 +72,12 @@ public class ServiceType {
 		this.description = description;
 	}
 
-	public String getServiceImage() {
-		return serviceImage;
+	public String getServicePicture() {
+		return servicePicture;
 	}
 
-	public void setServiceImage(String serviceImage) {
-		this.serviceImage = serviceImage;
+	public void setServicePicture(String servicePicture) {
+		this.servicePicture = servicePicture;
 	}
 
 	public Integer getStatus() {
