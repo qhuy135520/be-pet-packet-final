@@ -10,8 +10,12 @@ import com.petpacket.final_project.entities.user.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 	Optional<User> findByUsername(String username);
-    Boolean existsByUsername(String username);
-    Boolean existsByEmail(String email);
-    Boolean existsByUsernameAndPassword(String username, String password);
-    Optional<User> findByEmail(String email);
+
+	Optional<User> findByEmail(String email);
+
+	Boolean existsByUsername(String username);
+
+	Boolean existsByEmail(String email);
+
+	Boolean existsByUsernameAndPassword(String username, String password);
 }

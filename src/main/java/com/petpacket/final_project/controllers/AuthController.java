@@ -4,16 +4,12 @@ import java.util.Optional;
 
 import javax.management.relation.RoleNotFoundException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,67 +24,39 @@ import com.petpacket.final_project.dto.authentication.OtpRequest;
 import com.petpacket.final_project.dto.authentication.ResetPasswordRequest;
 import com.petpacket.final_project.dto.authentication.SignInRequest;
 import com.petpacket.final_project.dto.authentication.SignUpRequest;
-import com.petpacket.final_project.dto.authentication.UserResponse;
-import com.petpacket.final_project.entities.user.ERole;
-import com.petpacket.final_project.entities.user.Role;
 import com.petpacket.final_project.entities.user.User;
-import com.petpacket.final_project.repository.user.RoleRepository;
 import com.petpacket.final_project.repository.user.UserRepository;
-import com.petpacket.final_project.services.OtpService;
-import com.petpacket.final_project.services.UserDetailsImpl;
-import com.petpacket.final_project.utils.JwtUtil;
+import com.petpacket.final_project.services.authentication.OtpService;
+import com.petpacket.final_project.services.authentication.ResetPasswordService;
+import com.petpacket.final_project.services.authentication.SignInService;
+import com.petpacket.final_project.services.authentication.SignUpService;
 
 import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+	@Autowired
 	private UserRepository userRepository;
-	private RoleRepository roleRepository;
+	@Autowired
 	private PasswordEncoder passwordEncoder;
-	private AuthenticationManager authenticationManager;
-	private JwtUtil jwtUtil;
-	private OtpService otpService;
-
-	public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository,
-			AuthenticationManager authenticationManager, JwtUtil jwtUtil, OtpService otpService) {
-		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.authenticationManager = authenticationManager;
-		this.jwtUtil = jwtUtil;
-		this.otpService = otpService;
-	}
+	@Autowired
+	private OtpService otpSignUpService;
+	@Autowired
+	private OtpService otpResetPasswordService;
+	@Autowired
+	private SignUpService signUpService;
+	@Autowired
+	private SignInService signInService;
+	@Autowired
+	private ResetPasswordService resetPasswordService;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> signin(@RequestBody SignInRequest signInRequest) throws RoleNotFoundException {
 		try {
-			Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(signInRequest.getUsername(), signInRequest.getPassword()));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			String jwt = jwtUtil.generateJwtToken(authentication);
-			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-			String roleName = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst()
-					.orElse("ROLE_CUSTOMER");
-
-			UserResponse userResponse = new UserResponse();
-			userResponse.setUserId(userDetails.getId());
-			userResponse.setUsername(userDetails.getUsername());
-			userResponse.setEmail(userDetails.getEmail());
-			userResponse.setGender(userDetails.getGender());
-			userResponse.setPhone(userDetails.getPhone());
-			userResponse.setStatus(userDetails.getStatus());
-			userResponse.setAddress(userDetails.getAddress());
-			userResponse.setRole(roleName);
-			userResponse.setName(userDetails.getName());
-
-			JwtResponse res = new JwtResponse();
-			res.setAccess_token(jwt);
-			res.setUser(userResponse);
-			
+			JwtResponse jwtResponse = signInService.signin(signInRequest);
 			SuccessResponse successResponse = new SuccessResponse();
-			successResponse.setData(res);
+			successResponse.setData(jwtResponse);
 			successResponse.setStatusCode(HttpStatus.OK.value());
 			successResponse.setMessage("Fetch Login");
 
@@ -97,7 +65,6 @@ public class AuthController {
 			ErrorResponse errorResponse = new ErrorResponse("Account not activated", "Unauthorized",
 					HttpStatus.LOCKED.value());
 			return ResponseEntity.status(HttpStatus.LOCKED).body(errorResponse);
-
 		} catch (BadCredentialsException e) {
 			ErrorResponse errorResponse = new ErrorResponse("Username/Password is incorrect", "Unauthorized",
 					HttpStatus.UNAUTHORIZED.value());
@@ -110,138 +77,107 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<String> signup(@RequestBody SignUpRequest signUpRequest, HttpSession session) {
-		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("username is already taken");
-		}
-		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("email is already taken");
-		}
-		String hashedPassword = passwordEncoder.encode(signUpRequest.getPassword());
+	public ResponseEntity<?> signup(@RequestBody SignUpRequest signUpRequest) {
 
-		Optional<Role> userRole = roleRepository.findByRoleName(ERole.ROLE_CUSTOMER);
-		if (userRole.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Role not found");
+		ResponseEntity<?> responseErrorValidate = signUpService.validate(signUpRequest);
+		if (responseErrorValidate != null) {
+			return responseErrorValidate;
 		}
 
-		String userName = signUpRequest.getName();
-		if (userName == null|| userName.isBlank() || userName.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("name is invalid");
-		}
-		String userPhone = signUpRequest.getPhone();
-		if (userPhone.isBlank() || userPhone.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("phone is invalid");
-		}
-		String userAddress = signUpRequest.getAddress();
-		if (userAddress.isBlank() || userAddress.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("address is invalid");
-		}
-		Integer userGender = signUpRequest.getGender();
-		if (userGender == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("gender is invalid");
-		}
+		signUpService.setSignUpRequest(signUpRequest);
 
-		String otp = otpService.generateOtp(signUpRequest.getEmail());
-		otpService.sendOtpEmail(signUpRequest.getEmail(), otp);
-		session.setAttribute("signUpRequest", signUpRequest);
-		session.setMaxInactiveInterval(5 * 60);
+		String otp = otpSignUpService.generateOtp(signUpRequest.getEmail());
 
-		return ResponseEntity.ok("OTP sended");
+		SuccessResponse successResponse = new SuccessResponse();
+		successResponse.setData("");
+		successResponse.setStatusCode(HttpStatus.OK.value());
+		successResponse.setMessage("OTP Sended");
+
+		otpSignUpService.sendOtpEmail(signUpRequest.getEmail(), otp);
+
+		return ResponseEntity.ok(successResponse);
+
 	}
 
 	@PostMapping("/verify-otp-signup")
-	public ResponseEntity<?> verifyOtpRegister(@RequestBody OtpRequest otpRequest, HttpSession session) {
-		if (!otpService.validateOtp(otpRequest.getEmail(), otpRequest.getOtp())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP is incorrect");
-		}
-		SignUpRequest signUpRequest = (SignUpRequest) session.getAttribute("signUpRequest");
-		if (signUpRequest == null || !signUpRequest.getEmail().equals(otpRequest.getEmail())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("registration information is invalid or expired");
+	public ResponseEntity<?> verifyOtpRegister(@RequestBody OtpRequest otpRequest) {
+
+		ResponseEntity<?> responseEntityOTPRequest = otpSignUpService.validate(otpRequest);
+		if (responseEntityOTPRequest != null) {
+			return responseEntityOTPRequest;
 		}
 
-		String hashedPassword = passwordEncoder.encode(signUpRequest.getPassword());
+		signUpService.signup(otpRequest.getEmail());
 
-		Optional<Role> userRole = roleRepository.findByRoleName(ERole.ROLE_CUSTOMER);
-		if (userRole.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("role not found");
-		}
+		SuccessResponse successResponse = new SuccessResponse();
+		successResponse.setData("");
+		successResponse.setStatusCode(HttpStatus.OK.value());
+		successResponse.setMessage("registration successful!");
 
-		User user = new User();
-		user.setUsername(signUpRequest.getUsername());
-		user.setEmail(signUpRequest.getEmail());
-		user.setPassword(hashedPassword);
-		user.setRole(userRole.get());
-		user.setAddress(signUpRequest.getAddress());
-		user.setPhone(signUpRequest.getPhone());
-		user.setGender(signUpRequest.getGender());
-		user.setName(signUpRequest.getName());
-		user.setStatus(1);
-		userRepository.save(user);
-
-		otpService.clearOtp(otpRequest.getEmail());
-		session.removeAttribute("signUpRequest");
-
-		return ResponseEntity.ok("registration successful!");
+		return ResponseEntity.ok(successResponse);
 	}
 
 	@PostMapping("/forgot-password")
-	public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest,
-			HttpSession session) {
+	public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest,
+			HttpSession httpSession) {
+
 		String email = forgotPasswordRequest.getEmail();
 		Optional<User> userOptional = userRepository.findByEmail(email);
 		if (userOptional.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("email does not exist");
+			ErrorResponse errorResponse = new ErrorResponse("Email not found!", "Bad request",
+					HttpStatus.BAD_REQUEST.value());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 		}
 
-		String otp = otpService.generateOtp(forgotPasswordRequest.getEmail());
-		session.setAttribute("otpResetPassword", otp);
-		session.setAttribute("emailResetPassword", email);
-		session.setMaxInactiveInterval(5 * 60);
+		String otp = otpResetPasswordService.generateOtp(forgotPasswordRequest.getEmail());
 
-		otpService.sendOtpEmail(forgotPasswordRequest.getEmail(), otp);
-
-		return ResponseEntity.ok("OTP has been sent to your email");
+		SuccessResponse successResponse = new SuccessResponse();
+		successResponse.setData("");
+		successResponse.setStatusCode(HttpStatus.OK.value());
+		successResponse.setMessage("registration successful!");
+		otpResetPasswordService.sendOtpEmail(forgotPasswordRequest.getEmail(), otp);
+		return ResponseEntity.ok(successResponse);
 	}
 
 	@PostMapping("/verify-otp-reset-password")
-	public ResponseEntity<String> verifyOtpResetPassword(@RequestBody OtpRequest otpRequest, HttpSession session) {
-		String inputOtp = otpRequest.getOtp();
-		String sessionOtp = (String) session.getAttribute("otpResetPassword");
-		String email = (String) session.getAttribute("emailResetPassword");
-		if (!otpRequest.getEmail().equals(email)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("email not verified");
-		} else if (!inputOtp.equals(sessionOtp)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP is invalid");
-		} else {
-			session.setAttribute("verifiedEmail", email);
-			return ResponseEntity.ok("OTP is valid, please reset your password");
+	public ResponseEntity<?> verifyOtpResetPassword(@RequestBody OtpRequest otpRequest, HttpSession httpSession) {
+
+		ResponseEntity<?> responseEntityOTPRequest = otpSignUpService.validate(otpRequest);
+		if (responseEntityOTPRequest != null) {
+			return responseEntityOTPRequest;
 		}
+
+		resetPasswordService.setEmailReset(otpRequest.getEmail());
+
+		SuccessResponse successResponse = new SuccessResponse();
+		successResponse.setData("");
+		successResponse.setStatusCode(HttpStatus.OK.value());
+		successResponse.setMessage("OTP is valid, please reset your password");
+
+		return ResponseEntity.ok(successResponse);
+
 	}
 
 	@PostMapping("/reset-password")
-	public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest,
-			HttpSession session) {
-		String email = (String) session.getAttribute("verifiedEmail");
-		if (email == null || !email.equals(resetPasswordRequest.getEmail())) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("email not verified");
-		}
-		if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmPassword())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("password doesn't match");
-		}
-		Optional<User> userOptional = userRepository.findByEmail(email);
-		if (userOptional.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("email does not exist");
+	public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest,
+			HttpSession httpSession) {
+		Optional<User> userOptional = userRepository.findByEmail(resetPasswordRequest.getEmail());
+
+		ResponseEntity<?> errorResponse = resetPasswordService.validate(resetPasswordRequest, userOptional);
+
+		if (errorResponse != null) {
+			return errorResponse;
 		}
 
 		User user = userOptional.get();
 		user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
 		userRepository.save(user);
 
-		session.removeAttribute("otpResetPassword");
-		session.removeAttribute("emailResetPassword");
-		session.removeAttribute("vefifiedEmail");
-
-		return ResponseEntity.ok("password updated successfully");
+		SuccessResponse successResponse = new SuccessResponse();
+		successResponse.setData("");
+		successResponse.setStatusCode(HttpStatus.OK.value());
+		successResponse.setMessage("Change password successful, Please sign in again to experience system!");
+		return ResponseEntity.ok(successResponse);
 	}
 
 }

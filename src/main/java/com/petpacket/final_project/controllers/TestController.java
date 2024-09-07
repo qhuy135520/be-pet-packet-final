@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.petpacket.final_project.services.UserDetailsImpl;
+import com.petpacket.final_project.services.user.UserDetailsImpl;
 
 import lombok.extern.log4j.Log4j2;
 

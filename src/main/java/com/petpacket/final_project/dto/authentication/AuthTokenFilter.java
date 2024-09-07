@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.petpacket.final_project.services.UserDetailsServiceImpl;
+import com.petpacket.final_project.services.user.UserDetailsServiceImpl;
 import com.petpacket.final_project.utils.JwtUtil;
 
 import jakarta.servlet.FilterChain;

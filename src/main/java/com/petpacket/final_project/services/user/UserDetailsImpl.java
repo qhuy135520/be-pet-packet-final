@@ -1,4 +1,4 @@
-package com.petpacket.final_project.services;
+package com.petpacket.final_project.services.user;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.petpacket.final_project.entities.user.User;
-import com.petpacket.final_project.services.UserService;
+import com.petpacket.final_project.services.user.UserService;
 
 @RestController
 @RequestMapping("/api/users")

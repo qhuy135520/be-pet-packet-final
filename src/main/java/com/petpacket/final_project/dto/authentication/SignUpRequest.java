@@ -1,9 +1,27 @@
 package com.petpacket.final_project.dto.authentication;
 
-import lombok.Data;
+import java.io.Serializable;
+import java.util.Optional;
 
-@Data
-public class SignUpRequest {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.petpacket.final_project.dto.ErrorResponse;
+import com.petpacket.final_project.entities.user.ERole;
+import com.petpacket.final_project.entities.user.Role;
+import com.petpacket.final_project.repository.user.RoleRepository;
+import com.petpacket.final_project.repository.user.UserRepository;
+
+public class SignUpRequest implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
+
 	private String username;
 	private String email;
 	private String password;
@@ -67,5 +85,7 @@ public class SignUpRequest {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
+	
 
 }

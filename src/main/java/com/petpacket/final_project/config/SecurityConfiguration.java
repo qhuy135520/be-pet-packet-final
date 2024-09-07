@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.petpacket.final_project.dto.authentication.AuthTokenFilter;
 import com.petpacket.final_project.services.AuthEntryPointJwt;
-import com.petpacket.final_project.services.UserDetailsServiceImpl;
+import com.petpacket.final_project.services.user.UserDetailsServiceImpl;
 
 @SuppressWarnings("deprecation")
 @Configuration
