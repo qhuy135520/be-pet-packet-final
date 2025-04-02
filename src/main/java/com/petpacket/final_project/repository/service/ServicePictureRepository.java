@@ -7,4 +7,5 @@ import com.petpacket.final_project.entities.service.ServicePicture;
 
 @Repository
 public interface ServicePictureRepository extends JpaRepository<ServicePicture, Integer> {
+
 }

@@ -1,96 +1,55 @@
 package com.petpacket.final_project.entities;
 
-import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.petpacket.final_project.entities.service.Service;
 import com.petpacket.final_project.entities.user.User;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "\"Review\"", schema = "public")
 public class Review {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "review_id")
 	private Integer reviewId;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "service_id", nullable = false)
 	private Service service;
-
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	@Column(name = "rating")
 	private Integer rating;
-	
+
 	@Column(name = "review_text")
 	private String reviewText;
 
-	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", name = "review_date")
-	private Timestamp reviewDate;
+	@CreationTimestamp
+	@Column(name = "review_date")
+	private LocalDateTime reviewDate;
 
-	public Review() {
-	}
-
-	public Review(Integer reviewId, Service service, User user, Integer rating, String reviewText,
-			Timestamp reviewDate) {
-		super();
-		this.reviewId = reviewId;
-		this.service = service;
-		this.user = user;
-		this.rating = rating;
-		this.reviewText = reviewText;
-		this.reviewDate = reviewDate;
-	}
-
-	public Integer getReviewId() {
-		return reviewId;
-	}
-
-	public void setReviewId(Integer reviewId) {
-		this.reviewId = reviewId;
-	}
-
-	public Service getService() {
-		return service;
-	}
-
-	public void setService(Service service) {
-		this.service = service;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Integer getRating() {
-		return rating;
-	}
-
-	public void setRating(Integer rating) {
-		this.rating = rating;
-	}
-
-	public String getReviewText() {
-		return reviewText;
-	}
-
-	public void setReviewText(String reviewText) {
-		this.reviewText = reviewText;
-	}
-
-	public Timestamp getReviewDate() {
-		return reviewDate;
-	}
-
-	public void setReviewDate(Timestamp reviewDate) {
-		this.reviewDate = reviewDate;
-	}
 }

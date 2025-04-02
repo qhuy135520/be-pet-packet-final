@@ -10,15 +10,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.petpacket.final_project.dto.ErrorResponse;
-import com.petpacket.final_project.dto.authentication.SignUpRequest;
-import com.petpacket.final_project.entities.user.ERole;
+import com.petpacket.final_project.Enum.ECity;
+import com.petpacket.final_project.Enum.EGender;
+import com.petpacket.final_project.Enum.ERole;
+import com.petpacket.final_project.Enum.EStatus;
+import com.petpacket.final_project.dto.request.authentication.SignUpRequest;
+import com.petpacket.final_project.dto.response.ErrorResponse;
 import com.petpacket.final_project.entities.user.Role;
 import com.petpacket.final_project.entities.user.User;
 import com.petpacket.final_project.repository.user.RoleRepository;
 import com.petpacket.final_project.repository.user.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class SignUpService {
 
 	@Autowired
@@ -54,11 +60,11 @@ public class SignUpService {
 		user.setEmail(signUpRequest.getEmail());
 		user.setPassword(hashedPassword);
 		user.setRole(userRole.get());
-		user.setAddress(signUpRequest.getAddress());
+		user.setCity(signUpRequest.getCity());
 		user.setPhone(signUpRequest.getPhone());
 		user.setGender(signUpRequest.getGender());
 		user.setName(signUpRequest.getName());
-		user.setStatus(1);
+		user.setStatus(EStatus.ACTIVE);
 		userRepository.save(user);
 
 		otpService.clearOtp(signUpRequest.getEmail());
@@ -96,13 +102,13 @@ public class SignUpService {
 					HttpStatus.BAD_REQUEST.value());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 		}
-		String userAddress = signUpRequest.getAddress();
-		if (userAddress.isBlank() || userAddress.isEmpty()) {
+		ECity userAddress = signUpRequest.getCity();
+		if (userAddress == null || userAddress.name().isBlank() || userAddress.name().isEmpty()) {
 			ErrorResponse errorResponse = new ErrorResponse("Address is invalid!", "Bad request",
 					HttpStatus.BAD_REQUEST.value());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 		}
-		Integer userGender = signUpRequest.getGender();
+		EGender userGender = signUpRequest.getGender();
 		if (userGender == null) {
 			ErrorResponse errorResponse = new ErrorResponse("Gender is invalid!", "Bad request",
 					HttpStatus.BAD_REQUEST.value());

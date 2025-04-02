@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import com.petpacket.final_project.entities.user.User;
 import com.petpacket.final_project.repository.user.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 

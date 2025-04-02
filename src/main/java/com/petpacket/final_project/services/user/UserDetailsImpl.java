@@ -2,16 +2,20 @@ package com.petpacket.final_project.services.user;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.petpacket.final_project.Enum.EGender;
+import com.petpacket.final_project.Enum.ECity;
+import com.petpacket.final_project.Enum.EStatus;
 import com.petpacket.final_project.entities.user.User;
 
+import jakarta.transaction.Transactional;
+
+@Transactional
 public class UserDetailsImpl implements UserDetails {
 	/**
 	 * 
@@ -22,16 +26,16 @@ public class UserDetailsImpl implements UserDetails {
 	private String email;
 	@JsonIgnore
 	private String password;
-	private String address;
+	private ECity address;
 	private String name;
-	private Integer gender;
+	private EGender gender;
 	private String phone;
-	private Integer status;
+	private EStatus status;
 	private String picture;
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(Integer userId, String username, String email, String password, String address,
-			String name, Integer gender, String phone, Integer status, String picture,
+	public UserDetailsImpl(Integer userId, String username, String email, String password, ECity address,
+			String name, EGender gender, String phone, EStatus status, String picture,
 			Collection<? extends GrantedAuthority> authorities) {
 		super();
 		this.userId = userId;
@@ -51,7 +55,7 @@ public class UserDetailsImpl implements UserDetails {
 	public static UserDetailsImpl build(User user) {
 		GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getRoleName().name());
 		return new UserDetailsImpl(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword(),
-				user.getAddress(), user.getName(), user.getGender(), user.getPhone(), user.getStatus(),
+				user.getCity(), user.getName(), user.getGender(), user.getPhone(), user.getStatus(),
 				user.getUserPicture(), Collections.singletonList(authority));
 	}
 
@@ -90,11 +94,11 @@ public class UserDetailsImpl implements UserDetails {
 		this.email = email;
 	}
 
-	public String getAddress() {
+	public ECity getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(ECity address) {
 		this.address = address;
 	}
 
@@ -106,11 +110,11 @@ public class UserDetailsImpl implements UserDetails {
 		this.name = name;
 	}
 
-	public Integer getGender() {
+	public EGender getGender() {
 		return gender;
 	}
 
-	public void setGender(Integer gender) {
+	public void setGender(EGender gender) {
 		this.gender = gender;
 	}
 
@@ -122,11 +126,11 @@ public class UserDetailsImpl implements UserDetails {
 		this.phone = phone;
 	}
 
-	public Integer getStatus() {
+	public EStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(EStatus status) {
 		this.status = status;
 	}
 
@@ -145,7 +149,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return this.status == 1 ? true : false;
+		return this.status.name().equals("ACTIVE") ? true : false;
 	}
 
 	@Override

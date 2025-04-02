@@ -1,199 +1,96 @@
 package com.petpacket.final_project.entities.service;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import com.petpacket.final_project.entities.Booking;
-import com.petpacket.final_project.entities.Comment;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.petpacket.final_project.Enum.ECity;
+import com.petpacket.final_project.entities.DiscountCode;
 import com.petpacket.final_project.entities.Review;
+import com.petpacket.final_project.entities.booking.Booking;
 import com.petpacket.final_project.entities.pet.PetType;
 import com.petpacket.final_project.entities.user.User;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "\"Service\"", schema = "public")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Service {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "service_id")
 	private Integer serviceId;
 
-	@Column(nullable = false, name = "service_name")
-	private String serviceName;
+	@Column(name = "city")
+	@Enumerated(EnumType.STRING)
+	private ECity city;
 
-	@ManyToOne
-	@JoinColumn(name = "service_type_id")
-	private ServiceType serviceType;
+	@Column(name = "address")
+	private String address;
 
-	@Column(name = "description")
-	private String description;
+	@Column(name = "overview")
+	private String overview;
+	
+	@Column(name = "name")
+	private String name;
+
+	@Column(name = "capacity")
+	private Integer capacity;
+	
+	@Column(name = "create_at")
+	private LocalDateTime createAt;
+	
+	@Column(name = "update_at")
+	private LocalDateTime updateAt;
+	
+	@Column(name = "status")
+	private String status;
+
+	@OneToMany(mappedBy = "service")
+	private List<ServiceDetail> serviceDetails;
+	
+	@OneToMany(mappedBy = "service")
+	private List<ServiceAddon> ServiceAddons;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "service")
+	private List<Booking> bookings;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(name = "address")
-	private String address;
-	
-	@Column(name = "status")
-	private Integer status;
+	@ManyToOne
+	@JoinColumn(name = "service_category_id", nullable = false)
+	private ServiceCategory serviceCategory;
 
 	@OneToMany(mappedBy = "service")
 	private List<ServicePicture> servicePictures;
 
 	@OneToMany(mappedBy = "service")
-	private List<ServicePrice> servicePrices;
-
+	private List<Review> review;
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "service")
-	private List<ServiceStore> serviceStores;
-
-	@OneToMany(mappedBy = "service")
-	private List<Review> reviews;
-
-	@OneToMany(mappedBy = "service")
-	private List<Comment> comments;
-
-	@OneToMany(mappedBy = "service")
-	private List<Booking> bookings;
-
-	@ManyToMany
-	@JoinTable(name = "\"ServicePetType\"", joinColumns = @JoinColumn(name = "service_id"), inverseJoinColumns = @JoinColumn(name = "pet_type_id"))
-	private List<PetType> petTypes;
-
-	public Service() {
-	}
-
-	public Service(Integer serviceId, String serviceName, ServiceType serviceType, String description, User user,
-			String address, Integer status, List<ServicePicture> servicePictures, List<ServicePrice> servicePrices,
-			List<ServiceStore> serviceStores, List<Review> reviews, List<Comment> comments, List<Booking> bookings,
-			List<PetType> petTypes) {
-		super();
-		this.serviceId = serviceId;
-		this.serviceName = serviceName;
-		this.serviceType = serviceType;
-		this.description = description;
-		this.user = user;
-		this.address = address;
-		this.status = status;
-		this.servicePictures = servicePictures;
-		this.servicePrices = servicePrices;
-		this.serviceStores = serviceStores;
-		this.reviews = reviews;
-		this.comments = comments;
-		this.bookings = bookings;
-		this.petTypes = petTypes;
-	}
-
-	public Integer getServiceId() {
-		return serviceId;
-	}
-
-	public void setServiceId(Integer serviceId) {
-		this.serviceId = serviceId;
-	}
-
-	public String getServiceName() {
-		return serviceName;
-	}
-
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
-	}
-
-	public ServiceType getServiceType() {
-		return serviceType;
-	}
-
-	public void setServiceType(ServiceType serviceType) {
-		this.serviceType = serviceType;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public List<ServicePicture> getServicePictures() {
-		return servicePictures;
-	}
-
-	public void setServicePictures(List<ServicePicture> servicePictures) {
-		this.servicePictures = servicePictures;
-	}
-
-	public List<ServicePrice> getServicePrices() {
-		return servicePrices;
-	}
-
-	public void setServicePrices(List<ServicePrice> servicePrices) {
-		this.servicePrices = servicePrices;
-	}
-
-	public List<ServiceStore> getServiceStores() {
-		return serviceStores;
-	}
-
-	public void setServiceStores(List<ServiceStore> serviceStores) {
-		this.serviceStores = serviceStores;
-	}
-
-	public List<Review> getReviews() {
-		return reviews;
-	}
-
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
-	}
-
-	public List<Comment> getComments() {
-		return comments;
-	}
-
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
-
-	public List<Booking> getBookings() {
-		return bookings;
-	}
-
-	public void setBookings(List<Booking> bookings) {
-		this.bookings = bookings;
-	}
-
-	public List<PetType> getPetTypes() {
-		return petTypes;
-	}
-
-	public void setPetTypes(List<PetType> petTypes) {
-		this.petTypes = petTypes;
-	}
+	private List<DiscountCode> discountCodes;
 
 }

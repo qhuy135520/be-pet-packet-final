@@ -9,13 +9,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.petpacket.final_project.dto.authentication.JwtResponse;
-import com.petpacket.final_project.dto.authentication.SignInRequest;
-import com.petpacket.final_project.dto.authentication.UserResponse;
+import com.petpacket.final_project.dto.request.authentication.JwtResponse;
+import com.petpacket.final_project.dto.request.authentication.SignInRequest;
+import com.petpacket.final_project.dto.request.authentication.UserResponse;
 import com.petpacket.final_project.services.user.UserDetailsImpl;
 import com.petpacket.final_project.utils.JwtUtil;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class SignInService {
 	@Autowired
 	private AuthenticationManager authenticationManager;

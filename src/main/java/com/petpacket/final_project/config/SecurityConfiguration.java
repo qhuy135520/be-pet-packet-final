@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.petpacket.final_project.dto.authentication.AuthTokenFilter;
+import com.petpacket.final_project.dto.request.authentication.AuthTokenFilter;
 import com.petpacket.final_project.services.AuthEntryPointJwt;
 import com.petpacket.final_project.services.user.UserDetailsServiceImpl;
 
@@ -59,10 +59,36 @@ public class SecurityConfiguration {
 	@SuppressWarnings("removal")
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().exceptionHandling().accessDeniedHandler(customAccessDeniedHandler).authenticationEntryPoint(authEntryPointJwt).and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-				.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/test/**").permitAll().anyRequest()
-				.authenticated();
+		http.cors().and().csrf().disable().exceptionHandling().accessDeniedHandler(customAccessDeniedHandler)
+				.authenticationEntryPoint(authEntryPointJwt).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+				.requestMatchers("api/cities").permitAll()
+				.requestMatchers("/api/auth/**").permitAll()
+				.requestMatchers("api/types/**").permitAll()
+				.requestMatchers("api/pets/**").permitAll()
+				.requestMatchers("api/blogs/**").permitAll()
+				.requestMatchers("/api/cities").permitAll()
+				.requestMatchers("/api/services/**").permitAll()
+				.requestMatchers("/api/auth/**").permitAll()
+				.requestMatchers("/api/review/**").permitAll()
+				.requestMatchers("/api/booking/**").permitAll()
+				.requestMatchers("/api/users/**").permitAll()
+				.requestMatchers("/api/admin/users/**").permitAll()
+				.requestMatchers("/api/admin/reviews/**").permitAll()
+				.requestMatchers("/api/admin/upgrades/**").permitAll()
+				.requestMatchers("/api/admin/revenue-management/**").permitAll()
+				.requestMatchers("/api/admin/services-management/**").permitAll()
+				.requestMatchers("/api/admin/booking-management/**").permitAll()
+				.requestMatchers("/api/upload/**").permitAll()
+				.requestMatchers("/api/upgrade-request/**").permitAll()
+				.requestMatchers("/api/payment/**").permitAll()
+				.requestMatchers("/api/weight-category/**").permitAll()
+				.requestMatchers("/api/service-detail/**").permitAll()
+				.requestMatchers("/api/service-addons/**").permitAll()
+				.requestMatchers("/api/transaction/**").permitAll()
+				.requestMatchers("/api/transaction-detail/**").permitAll()
+				.requestMatchers("/api/discount-code/**").permitAll()
+				.requestMatchers("/api/test/**").permitAll().anyRequest().authenticated();
 		http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

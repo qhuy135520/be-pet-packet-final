@@ -11,14 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.petpacket.final_project.dto.ErrorResponse;
-import com.petpacket.final_project.dto.authentication.OtpRequest;
-import com.petpacket.final_project.entities.user.ERole;
+import com.petpacket.final_project.Enum.ERole;
+import com.petpacket.final_project.dto.request.authentication.OtpRequest;
+import com.petpacket.final_project.dto.response.ErrorResponse;
 import com.petpacket.final_project.entities.user.Role;
 import com.petpacket.final_project.repository.user.RoleRepository;
 import com.petpacket.final_project.services.EmailService;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class OtpService {
 	@Autowired
 	private EmailService emailService;

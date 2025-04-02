@@ -9,11 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.petpacket.final_project.dto.ErrorResponse;
-import com.petpacket.final_project.dto.authentication.ResetPasswordRequest;
+import com.petpacket.final_project.dto.request.authentication.ResetPasswordRequest;
+import com.petpacket.final_project.dto.response.ErrorResponse;
 import com.petpacket.final_project.entities.user.User;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class ResetPasswordService {
 	private List<EmailDetails> emailReset = new ArrayList<>();
 

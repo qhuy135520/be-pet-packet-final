@@ -7,4 +7,5 @@ import com.petpacket.final_project.entities.Comment;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
+
 }

@@ -1,108 +1,58 @@
 package com.petpacket.final_project.entities.pet;
 
+import java.time.LocalDate;
+
 import com.petpacket.final_project.entities.user.User;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "\"Pet\"", schema = "public")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pet {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pet_id")
-    private Integer petId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "pet_id")
+	private Integer petId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+	@Column(name = "pet_name", nullable = false)
+	private String petName;
 
-    @Column(nullable = false,name = "pet_name")
-    private String petName;
+	@Column(name = "pet_birthdate")
+	private LocalDate petBirthDate;
 
-    @ManyToOne
-    @JoinColumn(name = "pet_type_id", nullable = false)
-    private PetType petType;
+	@Column(name = "pet_gender")
+	private String petGender;
 
-    @Column(name = "gender")
-    private Integer gender;
-    
-    @Column(name = "pet_picture")
-    private String petPicture;
-    
-    @Column(name = "status")
-    private String status;
+	@ManyToOne
+	@JoinColumn(name = "pet_type_id", nullable = false)
+	private PetType petType;
 
-    public Pet() {
-	}
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User petOwner;
 
-	public Pet(Integer petId, User user, String petName, PetType petType, Integer gender, String petPicture,
-			String status) {
-		super();
-		this.petId = petId;
-		this.user = user;
-		this.petName = petName;
-		this.petType = petType;
-		this.gender = gender;
-		this.petPicture = petPicture;
-		this.status = status;
-	}
+	@Column(name = "pet_weight")
+	private Double petWeight;
 
-	public Integer getPetId() {
-		return petId;
-	}
+	@Column(name = "description")
+	private String Description;
 
-	public void setPetId(Integer petId) {
-		this.petId = petId;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public String getPetName() {
-		return petName;
-	}
-
-	public void setPetName(String petName) {
-		this.petName = petName;
-	}
-
-	public PetType getPetType() {
-		return petType;
-	}
-
-	public void setPetType(PetType petType) {
-		this.petType = petType;
-	}
-
-	public Integer getGender() {
-		return gender;
-	}
-
-	public void setGender(Integer gender) {
-		this.gender = gender;
-	}
-
-	public String getPetPicture() {
-		return petPicture;
-	}
-
-	public void setPetPicture(String petPicture) {
-		this.petPicture = petPicture;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-    
+	@Column(name = "pet_picture")
+	private String petPicture;
 }
